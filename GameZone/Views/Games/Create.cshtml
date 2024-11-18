@@ -22,7 +22,7 @@
          <div class="Form-Group">
             <label asp-for="CategoryId" class="form-label mt-4"></label>
             <select class="form-select" asp-for=CategoryId asp-items="Model.Categoriess">
-                <option>Select Category</option>
+                <option value="">Select Category</option>
             </select>
         <span asp-validation-for="CategoryId" class="text-danger"> </span>
         </div>
@@ -44,8 +44,12 @@
 
          <div class="Form-Group">
             <label asp-for="Cover" class="form-label mt-4"></label>
-            <input  type="file" asp-for="Cover" class="form-control" placeholder="Upload "/>
-            <small class="form-text text-muted">only .jpg , .jpeg , .png are allowed With Max Size 1 MB </small>
+            <input  type="file" asp-for="Cover" class="form-control" placeholder="Upload "
+            data-rule-extension="@FileSettings.AllowedExtensions.Replace(".",string.Empty)"
+            data-msg-extension=" Not Allowed Extension"
+            data-rule-filesize="@FileSettings.MaxFileSizeInBytes" 
+            data-msg-filesize="Max Allowed Size is @FileSettings.MaxFileSizeInMB MB" >
+            <small class="form-text text-muted">only @FileSettings.AllowedExtensions are allowed With Max Size @FileSettings.MaxFileSizeInMB </small>
             <span asp-validation-for="Cover" class="text-danger d-block"> </span>
         </div>
 
@@ -55,5 +59,14 @@
     <div class = "col-md-6">
 
     </div>
-
 </form>
+
+@section Scripts{
+    <partial name="_ValidationScriptsPartial" />
+    <script>
+        $.validator.addMethod('filesize', function (value, element, param) {
+            return this.optional(element) || element.files[0].size <= param;
+        });
+
+    </script>
+}

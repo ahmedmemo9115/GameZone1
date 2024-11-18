@@ -19,20 +19,33 @@ namespace GameZone.Services
         }
         public async Task Create (CreateGameFormViewModel model)
         {
-            var coverName = $"{Guid.NewGuid()}{Path.GetExtension(model.Cover.FileName)}";
+            if (model.Cover == null || model.Cover.Length == 0)
+                throw new InvalidOperationException("Cover file is missing or empty.");
 
+            if (!Directory.Exists(_imagePath))
+                Directory.CreateDirectory(_imagePath);
+
+            var coverName = $"{Guid.NewGuid()}{Path.GetExtension(model.Cover.FileName)}";
             var path = Path.Combine(_imagePath, coverName);
 
-            using var stream = File.Create(path);
-
+            try
+            {
+                using var stream = File.Create(path);
             await model.Cover.CopyToAsync(stream);
+            }
+            catch (Exception ex)
+            {
+                // Log and handle the error
+                throw new Exception("An error occurred while saving the file.", ex);
+            }
+
 
             Game game = new()
             {
                 Name = model.Name,
                 Description = model.Description,
                 CategoryId = model.CategoryId,
-              Cover = coverName,
+                Cover = coverName,
                 Device = model.SelectedDevices.Select(d => new GameDevice { DeviceId = d }).ToList()
             };
 
