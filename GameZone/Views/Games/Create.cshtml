@@ -1,0 +1,59 @@
+﻿@model CreateGameFormViewModel
+@{
+    ViewData["Title"] = "Add Game";
+}
+
+<h5>
+      <i class="bi bi-plus-circle-dotted"></i>
+    Add New Game
+</h5>
+ 
+
+<form asp-controller="Games"  asp-action="Create" enctype="multipart/form-data" method="post" asp-antiforgery="true" >
+    
+    <div class = "col-md-6">
+
+        <div class="Form-Group">
+              <label asp-for="Name" class="form-label mt-4">Name</label>
+              <input type="text" class="form-control" asp-for="Name" placeholder="Name">
+              <span asp-validation-for="Name" class="text-danger"> </span>
+        </div>
+
+         <div class="Form-Group">
+            <label asp-for="CategoryId" class="form-label mt-4"></label>
+            <select class="form-select" asp-for=CategoryId asp-items="Model.Categoriess">
+                <option>Select Category</option>
+            </select>
+        <span asp-validation-for="CategoryId" class="text-danger"> </span>
+        </div>
+
+        <div class="Form-Group">
+            <label asp-for="SelectedDevices" class="form-label mt-4"></label>
+            <select class="form-select" asp-for=SelectedDevices  asp-items="Model.Devices">
+                <option>Select Device</option>
+            </select>
+            <span asp-validation-for="SelectedDevices" class="text-danger"> </span>
+        </div>
+
+        <div class="Form-Group">
+            <label asp-for="Description" class="form-label mt-4"></label>
+           <textarea asp-for="Description" class="form-control" placeholder="Description"></textarea>
+            <span asp-validation-for="Description" class="text-danger"> </span>
+        </div>
+
+
+         <div class="Form-Group">
+            <label asp-for="Cover" class="form-label mt-4"></label>
+            <input  type="file" asp-for="Cover" class="form-control" placeholder="Upload "/>
+            <small class="form-text text-muted">only .jpg , .jpeg , .png are allowed With Max Size 1 MB </small>
+            <span asp-validation-for="Cover" class="text-danger d-block"> </span>
+        </div>
+
+        <button type="submit" class="btn btn-light text-black mt-4"  > Save</button>
+    </div>
+
+    <div class = "col-md-6">
+
+    </div>
+
+</form>
