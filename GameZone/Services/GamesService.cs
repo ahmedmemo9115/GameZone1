@@ -22,7 +22,18 @@
 				.AsNoTracking()
 				.ToList();
 		}
-		public async Task Create(CreateGameFormViewModel model)
+
+        public Game? GetByID(int id)
+        {
+			return _context.Games
+				 .Include(g => g.Category)
+				 .Include(g => g.Devices)
+				 .ThenInclude(d => d.Device)
+				 .AsNoTracking()
+				 .SingleOrDefault(g=>g.Id == id);
+        }
+
+        public async Task Create(CreateGameFormViewModel model)
 		{
 			if (model.Cover == null || model.Cover.Length == 0)
 				throw new InvalidOperationException("Cover file is missing or empty.");
@@ -59,5 +70,5 @@
 
 		}
 
-	}
+    }
 }

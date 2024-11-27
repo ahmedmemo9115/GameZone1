@@ -20,11 +20,19 @@ namespace GameZone.Controllers
             _gamesService = gamesService;
         }
 
-        public IActionResult Index()
+		public IActionResult Index()
+		{
+			var games = _gamesService.GetAll();
+			return View(games);
+		}
+        public IActionResult Details(int id)
         {
-            return View();
-        }
+            var game = _gamesService.GetByID(id);
 
+            if (game is null)
+                return NotFound();
+            return View(game);
+        }
 
         [HttpGet]
         public IActionResult Create()

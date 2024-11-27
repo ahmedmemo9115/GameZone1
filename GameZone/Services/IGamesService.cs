@@ -4,6 +4,8 @@
 	{
 		IEnumerable<Game> GetAll();
 
+        Game? GetByID(int id);
+
 		Task Create(CreateGameFormViewModel model);
 	}
 }
