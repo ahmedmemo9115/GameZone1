@@ -1,10 +1,10 @@
-using GameZone.Services;
 using Microsoft.AspNetCore.Http.Features;
 
 
 try
 {
     var builder = WebApplication.CreateBuilder(args);
+    builder.Host.UseEnvironment("Development");
 
     var ConnectionString = builder.Configuration.GetConnectionString("DefaultConnection")
                                         ?? throw new InvalidOperationException(message: "No Connection String Available");
