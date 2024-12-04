@@ -30,7 +30,7 @@
 				 .Include(g => g.Devices)
 				 .ThenInclude(d => d.Device)
 				 .AsNoTracking()
-				 .SingleOrDefault(g=>g.Id == id);
+				 .SingleOrDefault(g => g.Id == id);
         }
 
         public async Task Create(CreateGameFormViewModel model)
