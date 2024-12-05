@@ -7,5 +7,7 @@
         Game? GetByID(int id);
 
 		Task Create(CreateGameFormViewModel model);
+
+		Task<Game?> Update(EditGameFormViewModel model);
 	}
 }

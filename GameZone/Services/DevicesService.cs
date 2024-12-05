@@ -10,7 +10,7 @@
         }
 
 
-        public IEnumerable<SelectListItem> GetSelectLists()
+        public IEnumerable<SelectListItem> GetSelectList()
         {
             return _context.Device.Select(c => new SelectListItem { Value = c.Id.ToString(), Text = c.Name })
                 .OrderBy(c => c.Text)

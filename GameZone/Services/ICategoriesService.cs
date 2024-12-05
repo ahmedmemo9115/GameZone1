@@ -3,6 +3,6 @@
     public interface ICategoriesService
     {
 
-        IEnumerable<SelectListItem> GetSelectLists();
+        IEnumerable<SelectListItem> GetSelectList();
     }
 }

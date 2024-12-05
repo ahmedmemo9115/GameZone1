@@ -2,7 +2,7 @@
 {
     public interface IDevicesService
     {
-        IEnumerable<SelectListItem> GetSelectLists();
+        IEnumerable<SelectListItem> GetSelectList();
 
     }
 }

@@ -35,26 +35,7 @@
 
         public async Task Create(CreateGameFormViewModel model)
 		{
-			if (model.Cover == null || model.Cover.Length == 0)
-				throw new InvalidOperationException("Cover file is missing or empty.");
-
-			if (!Directory.Exists(_imagePath))
-				Directory.CreateDirectory(_imagePath);
-
-			var coverName = $"{Guid.NewGuid()}{Path.GetExtension(model.Cover.FileName)}";
-			var path = Path.Combine(_imagePath, coverName);
-
-			try
-			{
-				using var stream = File.Create(path);
-				await model.Cover.CopyToAsync(stream);
-			}
-			catch (Exception ex)
-			{
-				// Log and handle the error
-				throw new Exception("An error occurred while saving the file.", ex);
-			}
-
+			var coverName = await SaveCover(model.Cover);
 
 			Game game = new()
 			{
@@ -70,5 +51,67 @@
 
 		}
 
-    }
+		public async Task<Game?> Update(EditGameFormViewModel model)
+		{
+			var Game = _context.Games.
+				Include(g => g.Devices)
+				.SingleOrDefault(g => g.Id == model.id);
+
+			if (Game is null)
+				return null;
+
+			var hasnewcover = model.Cover is not null;
+			var oldcover = Game.Cover;
+
+			Game.Name = model.Name;
+			Game.Description = model.Description;
+			Game.CategoryId = model.CategoryId;
+			Game.Devices = model.SelectedDevices.Select(d => new GameDevice {DeviceId = d}).ToList() ;
+
+			if (hasnewcover)
+			{
+				Game.Cover = await SaveCover(model.Cover!);
+			}
+			var effrows = _context.SaveChanges();
+
+			if (effrows >0)
+			{
+				if (hasnewcover)
+				{
+					var cover = Path.Combine(_imagePath,oldcover);
+					File.Delete(cover);
+				}
+				return Game;
+			}
+			else { 
+				var cover = Path.Combine(_imagePath, Game.Cover);
+				File.Delete(cover);
+				return null;
+			}
+		}
+		private async Task<string> SaveCover(IFormFile Cover)
+		{
+
+			if (Cover == null || Cover.Length == 0)
+				throw new InvalidOperationException("Cover file is missing or empty.");
+
+			if (!Directory.Exists(_imagePath))
+				Directory.CreateDirectory(_imagePath);
+
+			var coverName = $"{Guid.NewGuid()}{Path.GetExtension(Cover.FileName)}";
+			var path = Path.Combine(_imagePath, coverName);
+
+			try
+			{
+				using var stream = File.Create(path);
+				await Cover.CopyToAsync(stream);
+			}
+			catch (Exception ex)
+			{
+				// Log and handle the error
+				throw new Exception("An error occurred while saving the file.", ex);
+			}
+			return coverName;
+		}
+	}
 }
