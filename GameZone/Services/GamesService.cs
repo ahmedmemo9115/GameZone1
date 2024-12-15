@@ -89,6 +89,27 @@
 				return null;
 			}
 		}
+
+		public bool Delete(int id)
+		{
+			var isDeleted = false;
+
+			var Game = _context.Games.Find(id);
+			if (Game is null)
+				return false;
+
+			_context.Remove(Game);
+			var effectedRows =_context.SaveChanges() ;
+			if (effectedRows > 0)
+			{
+				isDeleted = true;
+			var cover = _imagePath + Game.Cover;
+				File.Delete(cover);
+			}
+			
+			return isDeleted;
+		}
+
 		private async Task<string> SaveCover(IFormFile Cover)
 		{
 
@@ -113,5 +134,7 @@
 			}
 			return coverName;
 		}
+
+	
 	}
 }
