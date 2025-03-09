@@ -19,16 +19,19 @@ try
     {
         options.MultipartBodyLengthLimit = 10 * 1024 * 1024; // 10 MB
     });
-
-
     builder.Services.AddScoped<ICategoriesService, CategoriesService>();
-
     builder.Services.AddScoped<IDevicesService, DevicesService>();
-
     builder.Services.AddScoped<IGamesService, GamesService>();
 
 
     var app = builder.Build();
+
+
+    //using (var scope = app.Services.CreateScope())
+    //{
+    //    var dbContext = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+    //    dbContext.Database.Migrate();
+    //}
 
     // Configure the HTTP request pipeline.
     if (!app.Environment.IsDevelopment())
